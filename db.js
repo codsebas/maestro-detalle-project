@@ -3,22 +3,32 @@ const sql = require('mssql');
 const fs = require('fs');
 const path = require('path');
 
+// Clean environment variables (strip accidental quotes or spaces)
+function getEnvVar(key, fallback) {
+  let val = process.env[key] || fallback;
+  if (typeof val === 'string') {
+    val = val.trim().replace(/^["']|["']$/g, '');
+  }
+  return val;
+}
+
 const config = {
-  user: process.env.DB_USER || 'UsuarioEncuestas',
-  password: process.env.DB_PASSWORD || 'DesaWeb2025$!',
-  server: process.env.DB_SERVER || 'svr-sql-ctezo.southcentralus.cloudapp.azure.com',
-  database: process.env.DB_NAME || 'db_WebDevUMG',
-  port: parseInt(process.env.DB_PORT || '1433'),
+  user: getEnvVar('DB_USER', 'UsuarioEncuestas'),
+  password: getEnvVar('DB_PASSWORD', 'DesaWeb2025$!'),
+  server: getEnvVar('DB_SERVER', 'svr-sql-ctezo.southcentralus.cloudapp.azure.com'),
+  database: getEnvVar('DB_NAME', 'db_WebDevUMG'),
+  port: parseInt(getEnvVar('DB_PORT', '1433')),
   options: {
     encrypt: true,
     trustServerCertificate: true,
-    connectTimeout: 5000,
-    requestTimeout: 5000
+    connectTimeout: 15000,
+    requestTimeout: 15000
   }
 };
 
 let sqlPool = null;
 let useFallback = false;
+let isInitializing = null;
 const fallbackFilePath = path.join(__dirname, 'local_data.json');
 
 // Memory store for zero-dependency fallback
@@ -66,20 +76,39 @@ function saveFallbackData() {
 }
 
 async function initDb() {
-  try {
-    console.log(`🔌 Conectando a SQL Server (${config.server})...`);
-    sqlPool = await sql.connect(config);
-    console.log('✅ Conexión exitosa a la base de datos SQL Server.');
-    useFallback = false;
-  } catch (err) {
-    console.warn('⚠️ Base de datos remota SQL Server no respondió en 5s:', err.message);
-    console.log('🔄 Activando motor resiliente local (Zero-Dependency fallback store)...');
-    loadFallbackData();
-    useFallback = true;
+  if (sqlPool) return sqlPool;
+  if (isInitializing) return isInitializing;
+
+  isInitializing = (async () => {
+    try {
+      console.log(`🔌 Conectando a SQL Server (${config.server})...`);
+      sqlPool = await sql.connect(config);
+      console.log('✅ Conexión exitosa a la base de datos SQL Server.');
+      useFallback = false;
+      return sqlPool;
+    } catch (err) {
+      console.warn('⚠️ Base de datos remota SQL Server no respondió:', err.message);
+      console.log('🔄 Activando motor resiliente local (Zero-Dependency fallback store)...');
+      loadFallbackData();
+      useFallback = true;
+      return null;
+    } finally {
+      isInitializing = null;
+    }
+  })();
+
+  return isInitializing;
+}
+
+async function ensureDbConnected() {
+  if (!sqlPool && !useFallback) {
+    await initDb();
   }
 }
 
 async function getMisiones() {
+  await ensureDbConnected();
+
   if (!useFallback && sqlPool) {
     try {
       const res = await sqlPool.request().query('SELECT MisionID, Nombre, Descripcion FROM Misiones ORDER BY MisionID');
@@ -94,6 +123,8 @@ async function getMisiones() {
 }
 
 async function getEstudiantesConMisiones() {
+  await ensureDbConnected();
+
   if (!useFallback && sqlPool) {
     try {
       const estudiantesRes = await sqlPool.request().query('SELECT Carnet, Nombre, Correo FROM Estudiantes ORDER BY Carnet');
@@ -171,6 +202,8 @@ async function getEstudiantesConMisiones() {
 }
 
 async function procesarRegistroMaestroDetalle(maestro, detalle) {
+  await ensureDbConnected();
+
   // 1. Validar IDs de misiones contra el catálogo
   const catalog = await getMisiones();
   const validIds = new Set(catalog.map(m => m.MisionID || m.misionId));
