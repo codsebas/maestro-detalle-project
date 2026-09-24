@@ -97,10 +97,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  let loadedCarnetForAutoFill = null;
+
+  function resetMissionStates() {
+    stateMisiones.forEach(m => {
+      const id = m.MisionID || m.misionId;
+      missionStates[id] = 'no-enviar';
+    });
+  }
+
   function handleCarnetLookup() {
     const enteredCarnet = inputCarnet.value.trim().toLowerCase();
     if (!enteredCarnet) {
       if (carnetLookupNotice) carnetLookupNotice.innerHTML = '';
+      if (loadedCarnetForAutoFill) {
+        inputNombre.value = '';
+        inputCorreo.value = '';
+        resetMissionStates();
+        renderMisionesFormList();
+        loadedCarnetForAutoFill = null;
+      }
       return;
     }
 
@@ -108,6 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (existing) {
       inputNombre.value = existing.nombre;
       inputCorreo.value = existing.correo;
+      loadedCarnetForAutoFill = existing.carnet.toLowerCase();
 
       // Auto-set mission toggles matching existing student status
       stateMisiones.forEach(m => {
@@ -126,6 +143,15 @@ document.addEventListener('DOMContentLoaded', () => {
         carnetLookupNotice.innerHTML = `<span class="inline-flex items-center gap-1.5 text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200"><i class="fa-solid fa-circle-check text-emerald-600"></i> Estudiante encontrado (${existing.porcentaje}% avance registrado) - Datos autocompletados</span>`;
       }
     } else {
+      // If switching from an auto-filled carnet to a brand new carnet, reset fields
+      if (loadedCarnetForAutoFill) {
+        inputNombre.value = '';
+        inputCorreo.value = '';
+        resetMissionStates();
+        renderMisionesFormList();
+        loadedCarnetForAutoFill = null;
+      }
+
       if (carnetLookupNotice) {
         carnetLookupNotice.innerHTML = `<span class="inline-flex items-center gap-1.5 text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200"><i class="fa-solid fa-user-plus text-slate-400"></i> Estudiante nuevo - Ingresa sus datos para registrarlo</span>`;
       }
