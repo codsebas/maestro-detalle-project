@@ -1,0 +1,243 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Maestro-Detalle con Catálogo y Control de Estado",
+    "version": "1.0.0",
+    "description": "API RESTful para el registro de estudiantes y seguimiento del estado de misiones (Lab Maestro-Detalle UMG).",
+    "contact": {
+      "name": "Soporte Técnico / Desarrollador",
+      "email": "mlopezp58@miumg.edu.gt"
+    }
+  },
+  "servers": [
+    {
+      "url": "/",
+      "description": "Servidor actual"
+    }
+  ],
+  "paths": {
+    "/api/registro": {
+      "post": {
+        "summary": "Registra o actualiza al estudiante y el estado de sus misiones en un solo POST.",
+        "description": "Inserta o actualiza un estudiante (clave carnet) y procesa su lista de misiones asociadas. Valida que todos los IDs de misión existan en el catálogo de la BD.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistroPayload"
+              },
+              "example": {
+                "maestro": {
+                  "carnet": "1890-20-11489",
+                  "nombre": "MERCEDES AZUCENA LÓPEZ PÉREZ",
+                  "correo": "mlopezp58@miumg.edu.gt"
+                },
+                "detalle": [
+                  {
+                    "misionId": 1,
+                    "estado": true
+                  },
+                  {
+                    "misionId": 2,
+                    "estado": false
+                  },
+                  {
+                    "misionId": 3,
+                    "estado": true
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Estudiante y misiones registrados o actualizados exitosamente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "success" },
+                    "message": { "type": "string", "example": "Estudiante y misiones procesados correctamente" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "carnet": { "type": "string", "example": "1890-20-11489" },
+                        "nombre": { "type": "string", "example": "MERCEDES AZUCENA LÓPEZ PÉREZ" },
+                        "correo": { "type": "string", "example": "mlopezp58@miumg.edu.gt" },
+                        "misionesProcesadas": { "type": "integer", "example": 3 }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error de validación de formato o Error de referencia (si un misionId no existe en el catálogo).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "status": "error",
+                  "error": "Error de referencia",
+                  "message": "Las misiones con ID (99) no existen en el catálogo de Misiones.",
+                  "invalidMisionIds": [99]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/misiones": {
+      "get": {
+        "summary": "Consulta el catálogo completo de misiones.",
+        "description": "Obtiene la lista de todas las misiones registradas en el catálogo del sistema.",
+        "responses": {
+          "200": {
+            "description": "Lista de misiones obtenida exitosamente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "success" },
+                    "total": { "type": "integer", "example": 5 },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Mision"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/estudiantes": {
+      "get": {
+        "summary": "Lista a los estudiantes registrados y el estado de sus misiones.",
+        "description": "Retorna el listado completo de estudiantes, porcentaje de avance y el desglose de misiones completadas vs pendientes.",
+        "responses": {
+          "200": {
+            "description": "Listado de estudiantes obtenido exitosamente.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "success" },
+                    "total": { "type": "integer", "example": 1 },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/EstudianteAvance"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RegistroPayload": {
+        "type": "object",
+        "required": ["maestro", "detalle"],
+        "properties": {
+          "maestro": {
+            "$ref": "#/components/schemas/Maestro"
+          },
+          "detalle": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DetalleMision"
+            }
+          }
+        }
+      },
+      "Maestro": {
+        "type": "object",
+        "required": ["carnet", "nombre", "correo"],
+        "properties": {
+          "carnet": { "type": "string", "example": "1890-20-11489" },
+          "nombre": { "type": "string", "example": "MERCEDES AZUCENA LÓPEZ PÉREZ" },
+          "correo": { "type": "string", "example": "mlopezp58@miumg.edu.gt" }
+        }
+      },
+      "DetalleMision": {
+        "type": "object",
+        "required": ["misionId", "estado"],
+        "properties": {
+          "misionId": { "type": "integer", "example": 1 },
+          "estado": { "type": "boolean", "example": true }
+        }
+      },
+      "Mision": {
+        "type": "object",
+        "properties": {
+          "MisionID": { "type": "integer", "example": 1 },
+          "Nombre": { "type": "string", "example": "Instalación de herramientas" },
+          "Descripcion": { "type": "string", "example": "Configuración del entorno de desarrollo" }
+        }
+      },
+      "EstudianteAvance": {
+        "type": "object",
+        "properties": {
+          "carnet": { "type": "string", "example": "1890-20-11489" },
+          "nombre": { "type": "string", "example": "MERCEDES AZUCENA LÓPEZ PÉREZ" },
+          "correo": { "type": "string", "example": "mlopezp58@miumg.edu.gt" },
+          "misionesCompletadas": { "type": "integer", "example": 2 },
+          "totalMisiones": { "type": "integer", "example": 3 },
+          "porcentaje": { "type": "integer", "example": 67 },
+          "misiones": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "misionId": { "type": "integer", "example": 1 },
+                "nombre": { "type": "string", "example": "Instalación de herramientas" },
+                "descripcion": { "type": "string", "example": "Configuración del entorno" },
+                "estado": { "type": "boolean", "example": true }
+              }
+            }
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "example": "error" },
+          "error": { "type": "string", "example": "Error de referencia" },
+          "message": { "type": "string", "example": "Las misiones con ID (99) no existen en el catálogo." },
+          "invalidMisionIds": {
+            "type": "array",
+            "items": { "type": "integer" }
+          }
+        }
+      }
+    }
+  }
+}

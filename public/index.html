@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tablero Maestro-Detalle | Control de Misiones UMG</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex flex-col antialiased">
+
+  <!-- Header / Navigation -->
+  <header class="bg-slate-800/80 backdrop-blur border-b border-slate-700/60 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="bg-blue-600 p-2.5 rounded-xl shadow-lg shadow-blue-500/30 text-white">
+          <i class="fa-solid fa-[#000] fa-list-check text-xl"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold tracking-tight text-white">Control Maestro-Detalle</h1>
+          <p class="text-xs text-slate-400">Seguimiento de Misiones & Avance Académico</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 w-full sm:w-auto">
+        <button id="btnOpenModal" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-sm font-semibold px-4 py-2.5 rounded-xl shadow-md transition-all duration-200">
+          <i class="fa-solid fa-paper-plane"></i> Probador POST /api/registro
+        </button>
+        <a href="/api-docs" target="_blank" class="inline-flex items-center gap-2 bg-slate-700/80 hover:bg-slate-700 text-slate-200 text-sm font-medium px-4 py-2.5 rounded-xl border border-slate-600 transition-all">
+          <i class="fa-solid fa-book-open text-blue-400"></i> Swagger UI
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+    <!-- KPI Metrics Section -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-5 flex items-center gap-4 shadow-sm">
+        <div class="bg-blue-500/10 text-blue-400 p-3.5 rounded-xl border border-blue-500/20">
+          <i class="fa-solid fa-user-graduate text-2xl"></i>
+        </div>
+        <div>
+          <p class="text-xs uppercase tracking-wider text-slate-400 font-medium">Estudiantes Registrados</p>
+          <h3 id="statEstudiantes" class="text-2xl font-bold text-white mt-0.5">0</h3>
+        </div>
+      </div>
+
+      <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-5 flex items-center gap-4 shadow-sm">
+        <div class="bg-emerald-500/10 text-emerald-400 p-3.5 rounded-xl border border-emerald-500/20">
+          <i class="fa-solid fa-square-check text-2xl"></i>
+        </div>
+        <div>
+          <p class="text-xs uppercase tracking-wider text-slate-400 font-medium">Misiones en Catálogo</p>
+          <h3 id="statMisiones" class="text-2xl font-bold text-white mt-0.5">0</h3>
+        </div>
+      </div>
+
+      <div class="bg-slate-800/60 border border-slate-700/60 rounded-2xl p-5 flex items-center gap-4 shadow-sm">
+        <div class="bg-amber-500/10 text-amber-400 p-3.5 rounded-xl border border-amber-500/20">
+          <i class="fa-solid fa-chart-line text-2xl"></i>
+        </div>
+        <div>
+          <p class="text-xs uppercase tracking-wider text-slate-400 font-medium">Avance Promedio Global</p>
+          <h3 id="statPromedio" class="text-2xl font-bold text-white mt-0.5">0%</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toolbar & Search Filter -->
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-800/40 p-4 rounded-2xl border border-slate-700/60">
+      <div class="relative w-full sm:w-80">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+        <input type="text" id="searchInput" placeholder="Buscar por carnet o nombre..." class="w-full bg-slate-900/90 border border-slate-700 rounded-xl pl-10 pr-4 py-2 text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all">
+      </div>
+
+      <div class="flex items-center gap-3 w-full sm:w-auto">
+        <button id="btnRefresh" class="inline-flex items-center gap-2 bg-slate-700/60 hover:bg-slate-700 text-slate-200 text-sm font-medium px-4 py-2 rounded-xl border border-slate-600 transition-all">
+          <i class="fa-solid fa-rotate-right"></i> Actualizar
+        </button>
+        <button id="btnViewCatalog" class="inline-flex items-center gap-2 bg-slate-700/60 hover:bg-slate-700 text-slate-200 text-sm font-medium px-4 py-2 rounded-xl border border-slate-600 transition-all">
+          <i class="fa-solid fa-list text-emerald-400"></i> Catálogo Misiones
+        </button>
+      </div>
+    </div>
+
+    <!-- Students List Grid -->
+    <section>
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-white flex items-center gap-2">
+          <i class="fa-solid fa-graduation-cap text-blue-400"></i> Tablero de Avance por Estudiante
+        </h2>
+        <span id="resultCount" class="text-xs bg-slate-800 border border-slate-700 text-slate-400 px-3 py-1 rounded-full">0 registros</span>
+      </div>
+
+      <div id="estudiantesGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Student cards will be loaded dynamically via JS -->
+      </div>
+
+      <div id="emptyState" class="hidden text-center py-16 bg-slate-800/30 border border-dashed border-slate-700 rounded-2xl">
+        <i class="fa-solid fa-folder-open text-4xl text-slate-600 mb-3"></i>
+        <h3 class="text-base font-semibold text-slate-300">No se encontraron estudiantes</h3>
+        <p class="text-xs text-slate-400 mt-1">Usa el probador para enviar el primer JSON de registro.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal Catalog -->
+  <div id="catalogModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-6 relative max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between border-b border-slate-700 pb-4">
+        <div class="flex items-center gap-3">
+          <div class="bg-emerald-500/10 text-emerald-400 p-2 rounded-lg">
+            <i class="fa-solid fa-list"></i>
+          </div>
+          <h3 class="text-lg font-bold text-white">Catálogo Oficial de Misiones</h3>
+        </div>
+        <button id="btnCloseCatalog" class="text-slate-400 hover:text-white p-2 rounded-lg">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div id="catalogList" class="overflow-y-auto flex-1 space-y-3 pr-2">
+        <!-- Catalog loaded dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal POST Tester -->
+  <div id="postModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-800 border border-slate-700 rounded-2xl max-w-3xl w-full p-6 shadow-2xl space-y-6 relative max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between border-b border-slate-700 pb-4">
+        <div class="flex items-center gap-3">
+          <div class="bg-blue-600/20 text-blue-400 p-2.5 rounded-xl border border-blue-500/30">
+            <i class="fa-solid fa-code"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-white">Probador de JSON / POST /api/registro</h3>
+            <p class="text-xs text-slate-400">Edita o usa el JSON de ejemplo para enviar la solicitud</p>
+          </div>
+        </div>
+        <button id="btnCloseModal" class="text-slate-400 hover:text-white p-2 rounded-lg">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4 flex-1 flex flex-col overflow-y-auto pr-1">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-semibold uppercase text-slate-300">Cuerpo del JSON (POST)</label>
+          <div class="flex items-center gap-2">
+            <button id="btnLoadValidJson" class="text-xs bg-slate-700 hover:bg-slate-600 text-blue-300 font-medium px-2.5 py-1 rounded border border-slate-600">
+              Cargar JSON Válido
+            </button>
+            <button id="btnLoadInvalidJson" class="text-xs bg-slate-700 hover:bg-slate-600 text-amber-300 font-medium px-2.5 py-1 rounded border border-slate-600">
+              Probar Error Referencia
+            </button>
+          </div>
+        </div>
+
+        <textarea id="jsonPayload" rows="10" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-4 text-xs font-mono text-emerald-400 focus:outline-none focus:ring-2 focus:ring-blue-500 leading-relaxed"></textarea>
+
+        <!-- Response output box -->
+        <div id="responseBox" class="hidden rounded-xl border p-4 text-xs font-mono">
+          <div class="flex items-center justify-between mb-2 pb-2 border-b border-slate-700">
+            <span id="responseStatus" class="font-bold"></span>
+            <span id="responseTime" class="text-slate-400 text-[10px]"></span>
+          </div>
+          <pre id="responseContent" class="overflow-x-auto text-[11px]"></pre>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 border-t border-slate-700 pt-4">
+        <button id="btnCancelModal" class="bg-slate-700 hover:bg-slate-600 text-slate-200 text-sm font-medium px-4 py-2 rounded-xl">
+          Cancelar
+        </button>
+        <button id="btnSendPost" class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold px-5 py-2 rounded-xl shadow-lg shadow-blue-600/30 transition-all">
+          <i class="fa-solid fa-paper-plane"></i> Enviar POST /api/registro
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-slate-800/40 border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+    <p>Desarrollo Web UMG &copy; 2026 | Asignación Maestro-Detalle | Repositorio GitHub: <a href="https://github.com/codsebas/maestro-detalle-project.git" target="_blank" class="text-blue-400 hover:underline">codsebas/maestro-detalle-project</a></p>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

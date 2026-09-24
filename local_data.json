@@ -1,0 +1,62 @@
+{
+  "misiones": [
+    {
+      "MisionID": 1,
+      "Nombre": "Instalación de herramientas",
+      "Descripcion": "Configuración del entorno de desarrollo y repositorio Git"
+    },
+    {
+      "MisionID": 2,
+      "Nombre": "Creación de API REST",
+      "Descripcion": "Desarrollo de endpoints maestro-detalle y Swagger"
+    },
+    {
+      "MisionID": 3,
+      "Nombre": "Conexión a Base de Datos",
+      "Descripcion": "Integración y mapeo de modelo relacional SQL Server"
+    },
+    {
+      "MisionID": 4,
+      "Nombre": "Pruebas de Endpoints",
+      "Descripcion": "Validación de POST /api/registro y manejo de errores de referencia"
+    },
+    {
+      "MisionID": 5,
+      "Nombre": "Despliegue en Producción",
+      "Descripcion": "Publicación en hosting público y frontend en línea"
+    }
+  ],
+  "estudiantes": [
+    {
+      "carnet": "1890-20-11489",
+      "nombre": "MERCEDES AZUCENA LÓPEZ PÉREZ",
+      "correo": "mlopezp58@miumg.edu.gt"
+    }
+  ],
+  "estudianteMisiones": [
+    {
+      "carnet": "1890-20-11489",
+      "misionId": 1,
+      "estado": true,
+      "fechaRegistro": "2026-09-24T15:01:46.770Z"
+    },
+    {
+      "carnet": "1890-20-11489",
+      "misionId": 2,
+      "estado": true,
+      "fechaRegistro": "2026-09-24T15:01:46.770Z"
+    },
+    {
+      "carnet": "1890-20-11489",
+      "misionId": 3,
+      "estado": true,
+      "fechaRegistro": "2026-09-24T15:01:46.770Z"
+    },
+    {
+      "carnet": "1890-20-11489",
+      "misionId": 4,
+      "estado": true,
+      "fechaRegistro": "2026-09-24T15:01:46.770Z"
+    }
+  ]
+}
