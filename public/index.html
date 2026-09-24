@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,11 +31,13 @@
   <!-- Custom Light CSS -->
   <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body class="bg-[#f4f4f0] text-slate-800 min-h-screen font-sans flex flex-col antialiased">
 
   <!-- Header / Navigation Bar -->
   <header class="bg-white border-b border-slate-200/80 sticky top-0 z-40 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
+    <div
+      class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
       <div class="flex items-center gap-3">
         <div class="bg-[#b7c396] text-slate-900 p-2.5 rounded-xl shadow-sm font-bold">
           <i class="fa-solid fa-list-check text-lg"></i>
@@ -59,7 +62,8 @@
       </nav>
 
       <div class="flex items-center gap-2">
-        <a href="/api-docs" target="_blank" class="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3.5 py-2 rounded-xl border border-slate-200 transition-all">
+        <a href="/api-docs" target="_blank"
+          class="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3.5 py-2 rounded-xl border border-slate-200 transition-all">
           <i class="fa-solid fa-book-open text-emerald-600"></i> Swagger UI
         </a>
       </div>
@@ -105,17 +109,21 @@
       </div>
 
       <!-- Toolbar & Search -->
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
+      <div
+        class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
         <div class="relative w-full sm:w-80">
           <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-          <input type="text" id="searchInput" placeholder="Buscar por carnet o nombre..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#7d8e56] transition-all">
+          <input type="text" id="searchInput" placeholder="Buscar por carnet o nombre..."
+            class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#7d8e56] transition-all">
         </div>
 
         <div class="flex items-center gap-3 w-full sm:w-auto">
-          <button id="btnGoToRegister" class="inline-flex items-center gap-2 bg-[#b7c396] hover:bg-[#99aa73] text-slate-900 font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition-all">
+          <button id="btnGoToRegister"
+            class="inline-flex items-center gap-2 bg-[#b7c396] hover:bg-[#99aa73] text-slate-900 font-bold text-xs px-4 py-2.5 rounded-xl shadow-sm transition-all">
             <i class="fa-solid fa-plus"></i> Registrar Nuevo Avance
           </button>
-          <button id="btnRefresh" class="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-slate-200 transition-all">
+          <button id="btnRefresh"
+            class="inline-flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3.5 py-2.5 rounded-xl border border-slate-200 transition-all">
             <i class="fa-solid fa-rotate-right"></i> Actualizar
           </button>
         </div>
@@ -127,7 +135,9 @@
           <h2 class="text-base font-bold text-slate-900 flex items-center gap-2">
             <i class="fa-solid fa-graduation-cap text-[#617042]"></i> Avance de Estudiantes
           </h2>
-          <span id="resultCount" class="text-xs bg-white border border-slate-200 text-slate-500 px-3 py-1 rounded-full shadow-sm">0 registros</span>
+          <span id="resultCount"
+            class="text-xs bg-white border border-slate-200 text-slate-500 px-3 py-1 rounded-full shadow-sm">0
+            registros</span>
         </div>
 
         <div id="estudiantesGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -145,82 +155,124 @@
     <!-- ==================== VIEW 2: REGISTRAR AVANCE (MODO FORMULARIO Y JSON REPLICADO) ==================== -->
     <section id="viewRegistrar" class="hidden space-y-6">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
+
         <!-- LEFT COLUMN: Formulario de Registro -->
         <div class="lg:col-span-7 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-6">
           <div class="flex items-center justify-between border-b border-slate-100 pb-4">
             <div>
               <h2 class="text-xl font-bold text-slate-900">Registrar avance</h2>
-              <p class="text-xs text-slate-500 mt-0.5">Ingresa los datos del estudiante y selecciona el estado de cada misión</p>
+              <p class="text-xs text-slate-500 mt-0.5">Ingresa los datos del estudiante y selecciona el estado de cada
+                misión</p>
             </div>
-            <button id="btnToggleEditMode" class="text-xs font-semibold border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 px-3.5 py-2 rounded-xl transition-all shadow-sm">
-              <i class="fa-solid fa-code text-[#617042] mr-1"></i> <span id="lblToggleEdit">Editar JSON directamente</span>
+            <button id="btnToggleEditMode"
+              class="text-xs font-semibold border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 px-3.5 py-2 rounded-xl transition-all shadow-sm">
+              <i class="fa-solid fa-code text-[#617042] mr-1"></i> <span id="lblToggleEdit">Editar JSON
+                directamente</span>
             </button>
           </div>
 
-          <!-- Estudiante Fields -->
-          <div class="space-y-4">
-            <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider text-xs">Estudiante</h3>
-            
-            <div class="space-y-1.5">
-              <label for="inputCarnet" class="block text-xs font-semibold text-slate-700">Carnet</label>
-              <input type="text" id="inputCarnet" placeholder="1890-20-11489" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#7d8e56] transition-all">
-              <div id="carnetLookupNotice" class="text-[11px] font-medium mt-1 min-h-[18px]"></div>
+          <!-- LEFT COLUMN CONTAINER -->
+          <div class="space-y-6">
+            <!-- Form View (Default) -->
+            <div id="formSection" class="space-y-6">
+              <!-- Estudiante Fields -->
+              <div class="space-y-4">
+                <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider text-xs">Estudiante</h3>
+
+                <div class="space-y-1.5">
+                  <label for="inputCarnet" class="block text-xs font-semibold text-slate-700">Carnet</label>
+                  <input type="text" id="inputCarnet" placeholder="1890-20-11489"
+                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#7d8e56] transition-all">
+                  <div id="carnetLookupNotice" class="text-[11px] font-medium mt-1 min-h-[18px]"></div>
+                </div>
+
+                <div class="space-y-1.5">
+                  <label for="inputNombre" class="block text-xs font-semibold text-slate-700">Nombre completo</label>
+                  <input type="text" id="inputNombre" placeholder="MERCEDES AZUCENA LÓPEZ PÉREZ"
+                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#7d8e56] transition-all">
+                </div>
+
+                <div class="space-y-1.5">
+                  <label for="inputCorreo" class="block text-xs font-semibold text-slate-700">Correo</label>
+                  <input type="email" id="inputCorreo" placeholder="usuario@miumg.edu.gt"
+                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#7d8e56] transition-all">
+                </div>
+              </div>
+
+              <!-- Misiones Toggle List -->
+              <div class="space-y-4 border-t border-slate-100 pt-5">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-sm font-bold text-slate-900">Misiones</h3>
+                  <span class="text-xs text-slate-400">Selecciona el estado para incluir en el detalle</span>
+                </div>
+
+                <div id="misionesFormList" class="space-y-3">
+                  <!-- Dynamically rendered mission 3-way toggle rows -->
+                </div>
+              </div>
             </div>
 
-            <div class="space-y-1.5">
-              <label for="inputNombre" class="block text-xs font-semibold text-slate-700">Nombre completo</label>
-              <input type="text" id="inputNombre" placeholder="MERCEDES AZUCENA LÓPEZ PÉREZ" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#7d8e56] transition-all">
+            <!-- Direct JSON Editor View (Shown when Editar JSON directamente is clicked) -->
+            <div id="rawJsonEditorSection" class="hidden space-y-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider text-xs">Editor de JSON Manual</h3>
+                  <p class="text-xs text-slate-500">Edita o pega el código JSON libremente</p>
+                </div>
+                <span class="text-[10px] font-mono font-bold bg-amber-100 text-amber-800 px-2.5 py-1 rounded-md">
+                  Modo Editor Código
+                </span>
+              </div>
+
+              <textarea id="rawJsonInput" rows="15"
+                placeholder="Pega o edita tu JSON aquí..."
+                class="w-full bg-[#151810] text-[#d5e0cb] border border-slate-700 rounded-xl p-4 text-xs font-mono leading-relaxed focus:outline-none focus:ring-2 focus:ring-[#7d8e56] transition-all shadow-inner"></textarea>
             </div>
 
-            <div class="space-y-1.5">
-              <label for="inputCorreo" class="block text-xs font-semibold text-slate-700">Correo</label>
-              <input type="email" id="inputCorreo" placeholder="usuario@miumg.edu.gt" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#7d8e56] transition-all">
-            </div>
-          </div>
+            <!-- Action Buttons -->
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-4">
+              <div class="flex items-center gap-2">
+                <button id="btnPreloadValid" type="button"
+                  class="text-xs text-slate-600 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg font-medium border border-slate-200">
+                  Prellenar Ejemplo
+                </button>
+                <button id="btnPreloadInvalid" type="button"
+                  class="text-xs text-amber-700 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-lg font-medium border border-amber-200">
+                  Probar Error Ref (ID 99)
+                </button>
+              </div>
 
-          <!-- Misiones Toggle List -->
-          <div class="space-y-4 border-t border-slate-100 pt-5">
-            <div class="flex items-center justify-between">
-              <h3 class="text-sm font-bold text-slate-900">Misiones</h3>
-              <span class="text-xs text-slate-400">Selecciona el estado para incluir en el detalle</span>
-            </div>
-
-            <div id="misionesFormList" class="space-y-3">
-              <!-- Dynamically rendered mission 3-way toggle rows -->
-            </div>
-          </div>
-
-          <!-- Submit Button -->
-          <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-4">
-            <div class="flex items-center gap-2">
-              <button id="btnPreloadValid" type="button" class="text-xs text-slate-600 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-lg font-medium border border-slate-200">
-                Prellenar Ejemplo
+              <button id="btnSubmitForm" type="button"
+                class="inline-flex items-center gap-2 bg-[#b7c396] hover:bg-[#99aa73] text-slate-900 font-bold text-sm px-6 py-2.5 rounded-xl shadow-sm transition-all">
+                <i class="fa-solid fa-paper-plane"></i> Enviar avance (POST)
               </button>
-              <button id="btnPreloadInvalid" type="button" class="text-xs text-amber-700 bg-amber-50 hover:bg-amber-100 px-3 py-1.5 rounded-lg font-medium border border-amber-200">
-                Probar Error Ref (ID 99)
-              </button>
             </div>
-
-            <button id="btnSubmitForm" type="button" class="inline-flex items-center gap-2 bg-[#b7c396] hover:bg-[#99aa73] text-slate-900 font-bold text-sm px-6 py-2.5 rounded-xl shadow-sm transition-all">
-              <i class="fa-solid fa-paper-plane"></i> Enviar avance (POST)
-            </button>
           </div>
         </div>
 
-        <!-- RIGHT COLUMN: JSON que se enviará & Code Editor -->
+        <!-- RIGHT COLUMN: Vista Previa del JSON & Response -->
         <div class="lg:col-span-5 space-y-6 sticky top-24">
           <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm space-y-4">
             <div class="flex items-center justify-between">
-              <h2 class="text-base font-bold text-slate-900">JSON que se enviará</h2>
-              <span id="jsonModeBadge" class="text-[10px] uppercase font-mono font-bold bg-[#e9efe4] text-[#617042] px-2.5 py-1 rounded-md">
-                Sincronizado con Formulario
+              <h2 class="text-base font-bold text-slate-900">Vista Previa del JSON</h2>
+              <span id="jsonModeBadge"
+                class="text-[10px] uppercase font-mono font-bold bg-[#e9efe4] text-[#617042] px-2.5 py-1 rounded-md">
+                SINCRONIZADO CON FORMULARIO
               </span>
             </div>
 
-            <!-- Dark Code Box representing the exact JSON preview -->
-            <div class="relative">
-              <textarea id="jsonEditor" rows="14" readonly class="w-full bg-[#1e2318] text-[#d5e0cb] border border-slate-800 rounded-xl p-4 text-xs font-mono leading-relaxed focus:outline-none transition-all shadow-inner"></textarea>
+            <!-- Dark Code Box for Preview -->
+            <div id="previewCodeBox" class="relative">
+              <textarea id="jsonEditor" rows="14" readonly
+                class="w-full bg-[#1e2318] text-[#d5e0cb] border border-slate-800 rounded-xl p-4 text-xs font-mono leading-relaxed focus:outline-none transition-all shadow-inner"></textarea>
+            </div>
+
+            <!-- Syntax Error Warning Alert (Displayed if JSON has syntax errors) -->
+            <div id="syntaxErrorAlert" class="hidden rounded-xl border border-rose-300 bg-rose-50 p-4 text-xs font-mono text-rose-800 space-y-2">
+              <div class="font-bold text-rose-900 flex items-center gap-1.5">
+                <i class="fa-solid fa-triangle-exclamation text-rose-600"></i> Existen errores de sintaxis en el JSON
+              </div>
+              <div id="syntaxErrorMessage" class="text-[11px] text-rose-700 bg-rose-100/80 p-2.5 rounded-lg border border-rose-200 leading-relaxed font-mono"></div>
             </div>
 
             <!-- Live API Response Output -->
@@ -262,9 +314,12 @@
 
   <!-- Footer -->
   <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-500">
-    <p>Desarrollo Web UMG &copy; 2026 | Asignación Maestro-Detalle | Repositorio GitHub: <a href="https://github.com/codsebas/maestro-detalle-project.git" target="_blank" class="text-[#617042] font-semibold hover:underline">codsebas/maestro-detalle-project</a></p>
+    <p>Desarrollo Web UMG &copy; 2026 | Asignación Maestro-Detalle | Repositorio GitHub: <a
+        href="https://github.com/codsebas/maestro-detalle-project.git" target="_blank"
+        class="text-[#617042] font-semibold hover:underline">codsebas/maestro-detalle-project</a></p>
   </footer>
 
   <script src="js/app.js"></script>
 </body>
+
 </html>

@@ -27,6 +27,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const misionesFormList = document.getElementById('misionesFormList');
   const jsonEditor = document.getElementById('jsonEditor');
   const btnToggleEditMode = document.getElementById('btnToggleEditMode');
+  const formSection = document.getElementById('formSection');
+  const rawJsonEditorSection = document.getElementById('rawJsonEditorSection');
+  const rawJsonInput = document.getElementById('rawJsonInput');
+
+  const syntaxErrorAlert = document.getElementById('syntaxErrorAlert');
+  const syntaxErrorMessage = document.getElementById('syntaxErrorMessage');
+
   const lblToggleEdit = document.getElementById('lblToggleEdit');
   const jsonModeBadge = document.getElementById('jsonModeBadge');
 
@@ -161,22 +168,74 @@ document.addEventListener('DOMContentLoaded', () => {
   btnRefresh.addEventListener('click', loadData);
   searchInput.addEventListener('input', renderEstudiantes);
 
+  // Real-time input handling on rawJsonInput when in Direct JSON Edit Mode
+  rawJsonInput.addEventListener('input', handleRawJsonLiveUpdate);
+
+  function handleRawJsonLiveUpdate() {
+    const rawVal = rawJsonInput.value;
+    try {
+      const parsed = JSON.parse(rawVal);
+      // Valid JSON syntax!
+      syntaxErrorAlert.classList.add('hidden');
+      jsonEditor.value = JSON.stringify(parsed, null, 2);
+      jsonEditor.classList.remove('border-rose-500');
+      btnSubmitForm.disabled = false;
+      btnSubmitForm.classList.remove('opacity-50', 'cursor-not-allowed');
+    } catch (err) {
+      // Syntax error in JSON!
+      syntaxErrorAlert.classList.remove('hidden');
+      syntaxErrorMessage.textContent = err.message;
+      jsonEditor.value = rawVal; // Display raw value in preview
+      jsonEditor.classList.add('border-rose-500');
+    }
+  }
+
   // Direct Edit Mode Toggle
   btnToggleEditMode.addEventListener('click', () => {
     isDirectJsonEditMode = !isDirectJsonEditMode;
 
     if (isDirectJsonEditMode) {
-      jsonEditor.removeAttribute('readonly');
-      jsonEditor.classList.add('ring-2', 'ring-[#7d8e56]', 'bg-[#151810]');
+      // Switch Left Column to Raw JSON Editor View
+      formSection.classList.add('hidden');
+      rawJsonEditorSection.classList.remove('hidden');
+
+      rawJsonInput.value = jsonEditor.value;
       lblToggleEdit.textContent = 'Modificar desde formulario';
-      jsonModeBadge.textContent = 'Edición Manual Directa';
+      jsonModeBadge.textContent = 'EDITANDO JSON DIRECTAMENTE';
       jsonModeBadge.className = 'text-[10px] uppercase font-mono font-bold bg-amber-100 text-amber-800 px-2.5 py-1 rounded-md';
+
+      handleRawJsonLiveUpdate();
     } else {
-      jsonEditor.setAttribute('readonly', 'true');
-      jsonEditor.classList.remove('ring-2', 'ring-[#7d8e56]', 'bg-[#151810]');
+      // Switch Left Column back to Form View
+      try {
+        const parsed = JSON.parse(rawJsonInput.value);
+        if (parsed.maestro) {
+          if (parsed.maestro.carnet) inputCarnet.value = parsed.maestro.carnet;
+          if (parsed.maestro.nombre) inputNombre.value = parsed.maestro.nombre;
+          if (parsed.maestro.correo) inputCorreo.value = parsed.maestro.correo;
+        }
+        if (Array.isArray(parsed.detalle)) {
+          resetMissionStates();
+          parsed.detalle.forEach(d => {
+            if (d.misionId !== undefined) {
+              missionStates[d.misionId] = d.estado ? 'completada' : 'pendiente';
+            }
+          });
+          renderMisionesFormList();
+        }
+      } catch (e) {
+        // Syntax error remains; alert user before returning to form
+        alert('Advertencia: El JSON contiene errores de sintaxis y no pudo sincronizarse completamente con el formulario.');
+      }
+
+      rawJsonEditorSection.classList.add('hidden');
+      formSection.classList.remove('hidden');
+      syntaxErrorAlert.classList.add('hidden');
+
       lblToggleEdit.textContent = 'Editar JSON directamente';
-      jsonModeBadge.textContent = 'Sincronizado con Formulario';
+      jsonModeBadge.textContent = 'SINCRONIZADO CON FORMULARIO';
       jsonModeBadge.className = 'text-[10px] uppercase font-mono font-bold bg-[#e9efe4] text-[#617042] px-2.5 py-1 rounded-md';
+
       updateGeneratedJson();
     }
   });
@@ -200,7 +259,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   btnPreloadInvalid.addEventListener('click', () => {
     isDirectJsonEditMode = true;
-    jsonEditor.removeAttribute('readonly');
+    formSection.classList.add('hidden');
+    rawJsonEditorSection.classList.remove('hidden');
+
     lblToggleEdit.textContent = 'Modificar desde formulario';
     jsonModeBadge.textContent = 'Modo Prueba Error Referencia (ID 99)';
     jsonModeBadge.className = 'text-[10px] uppercase font-mono font-bold bg-rose-100 text-rose-800 px-2.5 py-1 rounded-md';
@@ -216,7 +277,8 @@ document.addEventListener('DOMContentLoaded', () => {
         { misionId: 99, estado: true } // ID 99 doesn't exist in catalog!
       ]
     };
-    jsonEditor.value = JSON.stringify(invalidJson, null, 2);
+    rawJsonInput.value = JSON.stringify(invalidJson, null, 2);
+    handleRawJsonLiveUpdate();
   });
 
   btnSubmitForm.addEventListener('click', handlePostSubmission);
@@ -445,10 +507,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Submit POST Request
   async function handlePostSubmission() {
     let payload;
+    const rawVal = isDirectJsonEditMode ? rawJsonInput.value : jsonEditor.value;
     try {
-      payload = JSON.parse(jsonEditor.value);
+      payload = JSON.parse(rawVal);
     } catch (e) {
-      alert('Error: El texto en el editor no es un JSON válido.');
+      alert(`Existen errores de sintaxis en el JSON:\n${e.message}`);
       return;
     }
 
