@@ -199,6 +199,10 @@ document.addEventListener('DOMContentLoaded', () => {
       formSection.classList.add('hidden');
       rawJsonEditorSection.classList.remove('hidden');
 
+      // Disable 'Prellenar Ejemplo' button during direct JSON edit mode
+      btnPreloadValid.disabled = true;
+      btnPreloadValid.classList.add('opacity-50', 'cursor-not-allowed', 'pointer-events-none');
+
       rawJsonInput.value = jsonEditor.value;
       lblToggleEdit.textContent = 'Modificar desde formulario';
       jsonModeBadge.textContent = 'EDITANDO JSON DIRECTAMENTE';
@@ -227,6 +231,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Syntax error remains; alert user before returning to form
         alert('Advertencia: El JSON contiene errores de sintaxis y no pudo sincronizarse completamente con el formulario.');
       }
+
+      // Re-enable 'Prellenar Ejemplo' button
+      btnPreloadValid.disabled = false;
+      btnPreloadValid.classList.remove('opacity-50', 'cursor-not-allowed', 'pointer-events-none');
 
       rawJsonEditorSection.classList.add('hidden');
       formSection.classList.remove('hidden');
