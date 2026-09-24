@@ -39,6 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const resTimeBadge = document.getElementById('resTimeBadge');
   const resBodyContent = document.getElementById('resBodyContent');
 
+  const carnetLookupNotice = document.getElementById('carnetLookupNotice');
+
   // Catalog Grid Element
   const catalogGrid = document.getElementById('catalogGrid');
 
@@ -83,12 +85,52 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Real-time Inputs Event Listeners
-  [inputCarnet, inputNombre, inputCorreo].forEach(input => {
+  // Real-time Carnet Auto-Lookup Logic
+  inputCarnet.addEventListener('input', () => {
+    handleCarnetLookup();
+    if (!isDirectJsonEditMode) updateGeneratedJson();
+  });
+
+  [inputNombre, inputCorreo].forEach(input => {
     input.addEventListener('input', () => {
       if (!isDirectJsonEditMode) updateGeneratedJson();
     });
   });
+
+  function handleCarnetLookup() {
+    const enteredCarnet = inputCarnet.value.trim().toLowerCase();
+    if (!enteredCarnet) {
+      if (carnetLookupNotice) carnetLookupNotice.innerHTML = '';
+      return;
+    }
+
+    const existing = stateEstudiantes.find(e => e.carnet.toLowerCase() === enteredCarnet);
+    if (existing) {
+      inputNombre.value = existing.nombre;
+      inputCorreo.value = existing.correo;
+
+      // Auto-set mission toggles matching existing student status
+      stateMisiones.forEach(m => {
+        const id = m.MisionID || m.misionId;
+        const estMision = (existing.misiones || []).find(x => x.misionId === id);
+        if (estMision) {
+          missionStates[id] = estMision.estado ? 'completada' : 'pendiente';
+        } else {
+          missionStates[id] = 'no-enviar';
+        }
+      });
+
+      renderMisionesFormList();
+
+      if (carnetLookupNotice) {
+        carnetLookupNotice.innerHTML = `<span class="inline-flex items-center gap-1.5 text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200"><i class="fa-solid fa-circle-check text-emerald-600"></i> Estudiante encontrado (${existing.porcentaje}% avance registrado) - Datos autocompletados</span>`;
+      }
+    } else {
+      if (carnetLookupNotice) {
+        carnetLookupNotice.innerHTML = `<span class="inline-flex items-center gap-1.5 text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200"><i class="fa-solid fa-user-plus text-slate-400"></i> Estudiante nuevo - Ingresa sus datos para registrarlo</span>`;
+      }
+    }
+  }
 
   btnRefresh.addEventListener('click', loadData);
   searchInput.addEventListener('input', renderEstudiantes);
@@ -186,6 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       updateMetrics();
       renderEstudiantes();
+      handleCarnetLookup();
       renderMisionesFormList();
       renderCatalogGrid();
       updateGeneratedJson();
@@ -240,9 +283,8 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
           </div>
 
-          <span class="px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase ${
-            m.estado ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : 'bg-slate-200 text-slate-600 border border-slate-300'
-          }">
+          <span class="px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase ${m.estado ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : 'bg-slate-200 text-slate-600 border border-slate-300'
+        }">
             <i class="fa-solid ${m.estado ? 'fa-check' : 'fa-clock'} mr-1"></i>
             ${m.estado ? 'Completada' : 'Pendiente'}
           </span>

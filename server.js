@@ -53,9 +53,9 @@ app.get('/', (req, res) => {
 async function startServer() {
   await db.initDb();
   app.listen(PORT, () => {
-    console.log(`🚀 Servidor ejecutándose en el puerto ${PORT}`);
-    console.log(`📚 Documentación Swagger UI en modo claro: http://localhost:${PORT}/api-docs`);
-    console.log(`💻 Tablero Frontend en modo claro: http://localhost:${PORT}/`);
+    console.log(`Servidor ejecutándose en el puerto ${PORT}`);
+    console.log(`Documentación Swagger: http://localhost:${PORT}/api-docs`);
+    console.log(`Tablero Frontend: http://localhost:${PORT}/`);
   });
 }
 
