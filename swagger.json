@@ -5,11 +5,15 @@
     "version": "1.0.0",
     "description": "API RESTful para el registro de estudiantes y seguimiento del estado de misiones (Lab Maestro-Detalle UMG).",
     "contact": {
-      "name": "Soporte Técnico / Desarrollador",
-      "email": "mlopezp58@miumg.edu.gt"
+      "name": "Albino Sebastián Rosales Ruano",
+      "email": "arosalesr13@miumg.edu.gt"
     }
   },
   "servers": [
+    {
+      "url": "https://maestro-detalle-project.vercel.app",
+      "description": "Servidor en Producción (Vercel)"
+    },
     {
       "url": "/",
       "description": "Servidor actual"
@@ -29,9 +33,9 @@
               },
               "example": {
                 "maestro": {
-                  "carnet": "1890-20-11489",
-                  "nombre": "MERCEDES AZUCENA LÓPEZ PÉREZ",
-                  "correo": "mlopezp58@miumg.edu.gt"
+                  "carnet": "1890-23-12105",
+                  "nombre": "ALBINO SEBASTIÁN ROSALES RUANO",
+                  "correo": "arosalesr13@miumg.edu.gt"
                 },
                 "detalle": [
                   {
@@ -64,9 +68,9 @@
                     "data": {
                       "type": "object",
                       "properties": {
-                        "carnet": { "type": "string", "example": "1890-20-11489" },
-                        "nombre": { "type": "string", "example": "MERCEDES AZUCENA LÓPEZ PÉREZ" },
-                        "correo": { "type": "string", "example": "mlopezp58@miumg.edu.gt" },
+                        "carnet": { "type": "string", "example": "1890-23-12105" },
+                        "nombre": { "type": "string", "example": "ALBINO SEBASTIÁN ROSALES RUANO" },
+                        "correo": { "type": "string", "example": "arosalesr13@miumg.edu.gt" },
                         "misionesProcesadas": { "type": "integer", "example": 3 }
                       }
                     }
@@ -182,9 +186,9 @@
         "type": "object",
         "required": ["carnet", "nombre", "correo"],
         "properties": {
-          "carnet": { "type": "string", "example": "1890-20-11489" },
-          "nombre": { "type": "string", "example": "MERCEDES AZUCENA LÓPEZ PÉREZ" },
-          "correo": { "type": "string", "example": "mlopezp58@miumg.edu.gt" }
+          "carnet": { "type": "string", "example": "1890-23-12105" },
+          "nombre": { "type": "string", "example": "ALBINO SEBASTIÁN ROSALES RUANO" },
+          "correo": { "type": "string", "example": "arosalesr13@miumg.edu.gt" }
         }
       },
       "DetalleMision": {
@@ -206,9 +210,9 @@
       "EstudianteAvance": {
         "type": "object",
         "properties": {
-          "carnet": { "type": "string", "example": "1890-20-11489" },
-          "nombre": { "type": "string", "example": "MERCEDES AZUCENA LÓPEZ PÉREZ" },
-          "correo": { "type": "string", "example": "mlopezp58@miumg.edu.gt" },
+          "carnet": { "type": "string", "example": "1890-23-12105" },
+          "nombre": { "type": "string", "example": "ALBINO SEBASTIÁN ROSALES RUANO" },
+          "correo": { "type": "string", "example": "arosalesr13@miumg.edu.gt" },
           "misionesCompletadas": { "type": "integer", "example": 2 },
           "totalMisiones": { "type": "integer", "example": 3 },
           "porcentaje": { "type": "integer", "example": 67 },

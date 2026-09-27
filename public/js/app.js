@@ -59,9 +59,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Defaults
   const defaultValidStudent = {
-    carnet: '1890-20-11489',
-    nombre: 'MERCEDES AZUCENA LÓPEZ PÉREZ',
-    correo: 'mlopezp58@miumg.edu.gt'
+    carnet: '1890-23-12105',
+    nombre: 'ALBINO SEBASTIÁN ROSALES RUANO',
+    correo: 'arosalesr13@miumg.edu.gt'
   };
 
   // Initial Load

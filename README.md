@@ -2,16 +2,19 @@
 
 > **Universidad Mariano Gálvez de Guatemala (UMG)**  
 > **Curso:** Desarrollo Web | Octavo Ciclo  
-> **Estudiante:** Mercedes Azucena López Pérez (Carnet: `1890-20-11489`)  
-> **Repositorio GitHub:** [codsebas/maestro-detalle-project](https://github.com/codsebas/maestro-detalle-project.git)
+> **Estudiante:** Albino Sebastián Rosales Ruano  
+> **Carnet:** `1890-23-12105` | **Correo:** `arosalesr13@miumg.edu.gt`  
+> **🌐 Sitio Web Publicado (Vercel):** [https://maestro-detalle-project.vercel.app/](https://maestro-detalle-project.vercel.app/)  
+> **📚 Documentación Swagger UI en Vivo:** [https://maestro-detalle-project.vercel.app/api-docs](https://maestro-detalle-project.vercel.app/api-docs)  
+> **🐙 Repositorio GitHub:** [https://github.com/codsebas/maestro-detalle-project](https://github.com/codsebas/maestro-detalle-project.git)  
 
 ---
 
 ## 📌 1. Descripción del Proyecto
 
-Solución Full-Stack de **API RESTful** y **Tablero de Avance (Dashboard)** para el manejo y control de misiones académicas en una arquitectura **Maestro-Detalle**.
+Solución Full-Stack de **API RESTful** y **Tablero de Avance (Dashboard)** para el control y seguimiento del progreso de misiones académicas en una arquitectura **Maestro-Detalle**.
 
-El sistema procesa en un solo `POST /api/registro` el encabezado del estudiante (Maestro) y la lista de misiones (Detalle), realizando las siguientes acciones:
+El sistema procesa en un solo endpoint `POST /api/registro` el encabezado del estudiante (Maestro) y la lista de misiones (Detalle), realizando las siguientes acciones:
 1. **Insertar estudiante** si no existe por su carnet.
 2. **Actualizar datos del estudiante** si ya existe (nombre/correo).
 3. **Validar existencia de los IDs de misión** en el catálogo oficial de la BD. Si algún ID no existe, retorna un **Error de Referencia** (`400 Bad Request`).
@@ -65,9 +68,9 @@ Recibe el JSON maestro-detalle y procesa la transacción en la BD.
 ```json
 {
   "maestro": {
-    "carnet": "1890-20-11489",
-    "nombre": "MERCEDES AZUCENA LÓPEZ PÉREZ",
-    "correo": "mlopezp58@miumg.edu.gt"
+    "carnet": "1890-23-12105",
+    "nombre": "ALBINO SEBASTIÁN ROSALES RUANO",
+    "correo": "arosalesr13@miumg.edu.gt"
   },
   "detalle": [
     {
@@ -92,9 +95,9 @@ Recibe el JSON maestro-detalle y procesa la transacción en la BD.
   "status": "success",
   "message": "Estudiante y misiones procesados correctamente",
   "data": {
-    "carnet": "1890-20-11489",
-    "nombre": "MERCEDES AZUCENA LÓPEZ PÉREZ",
-    "correo": "mlopezp58@miumg.edu.gt",
+    "carnet": "1890-23-12105",
+    "nombre": "ALBINO SEBASTIÁN ROSALES RUANO",
+    "correo": "arosalesr13@miumg.edu.gt",
     "misionesProcesadas": 3
   }
 }
@@ -105,7 +108,7 @@ Recibe el JSON maestro-detalle y procesa la transacción en la BD.
 {
   "status": "error",
   "error": "Error de referencia",
-  "message": "Las misiones con ID (99) no existen en el catálogo de Misiones.",
+  "message": "Error de referencia: Las misiones con ID (99) no existen en el catálogo de Misiones.",
   "invalidMisionIds": [99]
 }
 ```
@@ -138,7 +141,8 @@ Consulta el avance de todos los estudiantes y el estado de sus misiones.
 ---
 
 ### 4. `GET /api-docs` (Documentación Swagger UI)
-Documentación interactiva OpenAPI 3.0 para probar los endpoints en línea directamente desde el navegador.
+Documentación interactiva OpenAPI 3.0 para probar los endpoints en línea directamente desde el navegador:  
+👉 **[https://maestro-detalle-project.vercel.app/api-docs](https://maestro-detalle-project.vercel.app/api-docs)**
 
 ---
 
@@ -147,8 +151,9 @@ Documentación interactiva OpenAPI 3.0 para probar los endpoints en línea direc
 El proyecto incluye una aplicación web interactiva responsiva con:
 - **Resumen de Avance:** Porcentaje de completación ($0\% - 100\%$) e indicadores de avance global.
 - **Detalle de Misiones:** Desglose del estado de cada misión por estudiante.
-- **Probador de POST Integrado:** Consola interactiva para enviar solicitudes `POST /api/registro` y verificar códigos de estado HTTP y JSON de respuesta.
-- **Buscador en tiempo real:** Filtrado por carnet o nombre.
+- **Búsqueda y Autocompletado en Tiempo Real por Carnet:** Al ingresar un carnet registrado, autocompleta el nombre, correo y estado de misiones. Al escribir un carnet nuevo, se limpian los campos automáticamente.
+- **Probador de POST Integrado con Editor de Código:** Permite enviar desde formulario o editar directamente el JSON con validador de errores de sintaxis en tiempo real.
+- **Tema:** Modo Claro (*Light Mode*) estilizado.
 
 ---
 
@@ -173,8 +178,7 @@ El proyecto incluye una aplicación web interactiva responsiva con:
 
 ---
 
-## 🌐 6. Guía de Despliegue en la Nube
+## 🌐 6. Despliegue en la Nube (Vercel)
 
-El proyecto está preparado para su despliegue inmediato en hosting público:
-- **Vercel / Render:** Despliegue automático desde la rama `main` conectando la URL del repositorio de GitHub.
-- **GitHub Pages / Host estático:** Consumiendo la API alojada en la nube.
+El proyecto se encuentra desplegado y funcionando en Vercel con arquitectura Serverless y conexión perezosa (*Lazy Connection*) a SQL Server:
+- **URL Pública:** [https://maestro-detalle-project.vercel.app/](https://maestro-detalle-project.vercel.app/)

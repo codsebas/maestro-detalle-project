@@ -42,15 +42,15 @@ let memoryData = {
   ],
   estudiantes: [
     {
-      carnet: '1890-20-11489',
-      nombre: 'MERCEDES AZUCENA LÓPEZ PÉREZ',
-      correo: 'mlopezp58@miumg.edu.gt'
+      carnet: '1890-23-12105',
+      nombre: 'ALBINO SEBASTIÁN ROSALES RUANO',
+      correo: 'arosalesr13@miumg.edu.gt'
     }
   ],
   estudianteMisiones: [
-    { carnet: '1890-20-11489', misionId: 1, estado: true, fechaRegistro: new Date().toISOString() },
-    { carnet: '1890-20-11489', misionId: 2, estado: false, fechaRegistro: new Date().toISOString() },
-    { carnet: '1890-20-11489', misionId: 3, estado: true, fechaRegistro: new Date().toISOString() }
+    { carnet: '1890-23-12105', misionId: 1, estado: true, fechaRegistro: new Date().toISOString() },
+    { carnet: '1890-23-12105', misionId: 2, estado: false, fechaRegistro: new Date().toISOString() },
+    { carnet: '1890-23-12105', misionId: 3, estado: true, fechaRegistro: new Date().toISOString() }
   ]
 };
 

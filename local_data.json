@@ -28,35 +28,41 @@
   ],
   "estudiantes": [
     {
-      "carnet": "1890-20-11489",
-      "nombre": "MERCEDES AZUCENA LÓPEZ PÉREZ",
-      "correo": "mlopezp58@miumg.edu.gt"
+      "carnet": "1890-23-12105",
+      "nombre": "ALBINO SEBASTIÁN ROSALES RUANO",
+      "correo": "arosalesr13@miumg.edu.gt"
     }
   ],
   "estudianteMisiones": [
     {
-      "carnet": "1890-20-11489",
+      "carnet": "1890-23-12105",
       "misionId": 1,
       "estado": true,
-      "fechaRegistro": "2026-09-24T15:01:46.770Z"
+      "fechaRegistro": "2026-09-26T20:00:00.000Z"
     },
     {
-      "carnet": "1890-20-11489",
+      "carnet": "1890-23-12105",
       "misionId": 2,
       "estado": true,
-      "fechaRegistro": "2026-09-24T15:01:46.770Z"
+      "fechaRegistro": "2026-09-26T20:00:00.000Z"
     },
     {
-      "carnet": "1890-20-11489",
+      "carnet": "1890-23-12105",
       "misionId": 3,
       "estado": true,
-      "fechaRegistro": "2026-09-24T15:01:46.770Z"
+      "fechaRegistro": "2026-09-26T20:00:00.000Z"
     },
     {
-      "carnet": "1890-20-11489",
+      "carnet": "1890-23-12105",
       "misionId": 4,
       "estado": true,
-      "fechaRegistro": "2026-09-24T15:01:46.770Z"
+      "fechaRegistro": "2026-09-26T20:00:00.000Z"
+    },
+    {
+      "carnet": "1890-23-12105",
+      "misionId": 5,
+      "estado": true,
+      "fechaRegistro": "2026-09-26T20:00:00.000Z"
     }
   ]
 }
