@@ -18,8 +18,16 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Swagger UI Documentation in clean Light Mode
+// Swagger UI CDN assets for bulletproof Vercel serverless deployment
+const CSS_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui.min.css";
+const JS_URL = [
+  "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui-bundle.js",
+  "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui-standalone-preset.js"
+];
+
 const swaggerOptions = {
+  customCssUrl: CSS_URL,
+  customJs: JS_URL,
   customCss: `
     .swagger-ui { background-color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
     .swagger-ui .topbar { background-color: #ffffff; border-bottom: 1px solid #e2e8f0; box-shadow: none; }

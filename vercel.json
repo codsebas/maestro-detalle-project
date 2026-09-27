@@ -12,7 +12,11 @@
   ],
   "routes": [
     {
-      "src": "/api-docs",
+      "src": "/api-docs(.*)",
+      "dest": "server.js"
+    },
+    {
+      "src": "/swagger(.*)",
       "dest": "server.js"
     },
     {
